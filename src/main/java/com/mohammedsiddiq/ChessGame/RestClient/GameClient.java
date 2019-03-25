@@ -1,5 +1,6 @@
 package com.mohammedsiddiq.ChessGame.RestClient;
 
+import com.mohammedsiddiq.ChessGame.DTOs.MakeMove;
 import com.mohammedsiddiq.ChessGame.DTOs.Move;
 import com.mohammedsiddiq.ChessGame.DTOs.StartGameResponse;
 import retrofit2.Call;
@@ -13,6 +14,6 @@ public interface GameClient {
     Call<StartGameResponse> startNewGame(String userName, boolean firstMove);
 
     @POST("/Chess/makeMove")
-    Call<Move> makeNextMove(@Body Move move);
+    Call<Move> makeNextMove(@Body MakeMove move);
 
 }
