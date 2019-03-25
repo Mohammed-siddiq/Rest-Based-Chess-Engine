@@ -14,8 +14,6 @@ import java.util.List;
 
 public class RestBasedOpponentPlayer implements Player {
 
-    Config config = ConfigFactory.load("default");
-    String baseUrl = config.getString("SERVER_END_POINT");
     private String lastCmd = "";
 
     private String name;
