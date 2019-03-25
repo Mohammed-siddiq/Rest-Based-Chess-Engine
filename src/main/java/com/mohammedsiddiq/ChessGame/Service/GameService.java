@@ -1,26 +1,46 @@
 package com.mohammedsiddiq.ChessGame.Service;
 
+import com.mohammedsiddiq.ChessGame.DTOs.MakeMove;
 import com.mohammedsiddiq.ChessGame.DTOs.Move;
 import com.mohammedsiddiq.ChessGame.DTOs.Response;
 import com.mohammedsiddiq.ChessGame.DTOs.StartGameResponse;
 import com.mohammedsiddiq.ChessGame.EngineInterface.*;
+import com.mohammedsiddiq.ChessGame.RestClient.GameClient;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import org.petero.cuckoo.engine.chess.ComputerPlayer;
+import org.petero.cuckoo.engine.chess.Game;
 import org.petero.cuckoo.engine.chess.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import retrofit2.Call;
+import retrofit2.Retrofit;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 @Service
 public class GameService implements IChessEngine {
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     boolean done = false;
 
 
+    private Config config = ConfigFactory.load("default");
+
+    //Load opponent's end point.
+    private String opponentsEndPoint = config.getString("OPPONENTS_END_POINT");
+    private String playerName = config.getString("USER_NAME");
+    private String playAs = config.getString("PLAY_AS");
+
+    private Retrofit retrofit = new Retrofit.Builder().baseUrl(opponentsEndPoint).build();
+    private GameClient gameClient = retrofit.create(GameClient.class);
+
+
     //Map to keep track of multiple game instances
-    HashMap<Integer, ChessEngineService> gameToChessEngineMap = new HashMap<>();
+    private HashMap<Integer, ChessEngineService> gameToChessEngineMap = new HashMap<>();
 
 
     @Override
@@ -52,6 +72,8 @@ public class GameService implements IChessEngine {
             logger.debug("Intializing game.. with Rest user as black player");
 
             whitePlayer = new ComputerPlayer();
+            ComputerPlayer.engineName = "white" + " - " + playerName;
+
             whitePlayer.timeLimit(1, 1, false);
             blackPlayer = new RestBasedOpponentPlayer(userName);
             ((ComputerPlayer) whitePlayer).setTTLogSize(2);
@@ -61,12 +83,13 @@ public class GameService implements IChessEngine {
             logger.debug("Making my first move..");
 
             Move myMove = chessEngineService.makeMyNextMove();
-            myMove.setPlayer("White: " + "Alpha");
             response.setMyFirstMove(myMove);
         } else {
 
             logger.debug("Intializing game.. with Rest user as white player");
             blackPlayer = new ComputerPlayer();
+            ComputerPlayer.engineName = "black" + " - " + playerName;
+            blackPlayer.timeLimit(1, 1, false);
             whitePlayer = new RestBasedOpponentPlayer(userName);
             ((ComputerPlayer) blackPlayer).setTTLogSize(2);
             chessEngineService = new ChessEngineService(whitePlayer, blackPlayer);
@@ -119,6 +142,102 @@ public class GameService implements IChessEngine {
         Move myMove = chessEngineService.makeMyNextMove();
         chessEngineService.printChessBoard();
         return myMove;
+
+    }
+
+
+    private StartGameResponse getOpponentsFirstMove(boolean firstMove) throws IOException {
+
+
+        Call<StartGameResponse> request = gameClient.startNewGame(playerName, firstMove);
+
+        return request.execute().body();
+
+    }
+
+
+    //Makes an API call with current move and returns the responded move
+    private Move getOpponentsNextMove(MakeMove myMove) throws IOException {
+
+        Call<Move> request = gameClient.makeNextMove(myMove);
+        return request.execute().body();
+
+    }
+
+
+    public void play(ChessEngineService chessEngineService, Move myMove, int session) throws IOException {
+
+        MakeMove nextMove;
+        Move opponentsMove;
+        while (chessEngineService.getCurrentGameState() == Game.GameState.ALIVE) {
+
+
+            //waiting for other players move
+
+            logger.debug("Getting opponents Move");
+            nextMove = new MakeMove();
+            nextMove.setGameId(session);
+            nextMove.setMove(myMove);
+
+            opponentsMove = getOpponentsNextMove(nextMove);
+            chessEngineService.makeOpponentsNextMove(opponentsMove);
+
+            logger.debug("Making my move");
+            myMove = chessEngineService.makeMyNextMove();
+
+        }
+
+    }
+
+    void startNewGame() throws IOException {
+        ChessEngineService chessEngineService;
+        Move myMove;
+        int session;
+
+        ComputerPlayer.engineName = playAs + " - " + playerName;
+
+        if (playAs.equals("white")) {
+
+            logger.info("Starting the game as white");
+            Player whitePlayer = new ComputerPlayer();
+            whitePlayer.timeLimit(2, 2, false);
+
+            Player blackPlayer = new RestBasedOpponentPlayer();
+            chessEngineService = new ChessEngineService(whitePlayer, blackPlayer);
+
+            StartGameResponse opponentsResponse = getOpponentsFirstMove(false);
+            session = opponentsResponse.getSession().getSessionId();
+
+            myMove = chessEngineService.makeMyNextMove();
+
+
+            //Continue playing with the opponent
+            play(chessEngineService, myMove, session);
+
+
+        } else {
+
+            logger.info("Starting the game as black");
+
+            Player blackPlayer = new ComputerPlayer();
+            blackPlayer.timeLimit(2, 2, false);
+            RestBasedOpponentPlayer whitePlayer = new RestBasedOpponentPlayer();
+            chessEngineService = new ChessEngineService(whitePlayer, blackPlayer);
+
+            // Making first moves
+
+            StartGameResponse opponentsResponse = getOpponentsFirstMove(true);
+            chessEngineService.makeOpponentsNextMove(opponentsResponse.getMyFirstMove());
+            session = opponentsResponse.getSession().getSessionId();
+            logger.debug("Making first move");
+            myMove = chessEngineService.makeMyNextMove();
+
+
+            //Continue playing with the opponent
+            play(chessEngineService, myMove, session);
+
+
+        }
 
     }
 }
