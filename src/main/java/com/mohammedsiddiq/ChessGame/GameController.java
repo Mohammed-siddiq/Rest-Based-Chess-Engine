@@ -1,13 +1,11 @@
-package com.mohammedsiddiq.ChessGame.ChessGame;
+package com.mohammedsiddiq.ChessGame;
 
-import java.util.concurrent.atomic.AtomicLong;
-
-import com.mohammedsiddiq.ChessGame.DTOs.MakeMove;
-import com.mohammedsiddiq.ChessGame.DTOs.Move;
-import com.mohammedsiddiq.ChessGame.DTOs.Response;
-import com.mohammedsiddiq.ChessGame.DTOs.StartGameResponse;
-import com.mohammedsiddiq.ChessGame.EngineInterface.Session;
-import com.mohammedsiddiq.ChessGame.Service.GameService;
+import com.mohammedsiddiq.DTOs.MakeMove;
+import com.mohammedsiddiq.DTOs.Move;
+import com.mohammedsiddiq.DTOs.Response;
+import com.mohammedsiddiq.DTOs.StartGameResponse;
+import com.mohammedsiddiq.EngineInterface.Session;
+import com.mohammedsiddiq.Service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

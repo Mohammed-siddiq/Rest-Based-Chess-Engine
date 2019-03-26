@@ -1,8 +1,8 @@
-package com.mohammedsiddiq.ChessGame.EngineInterface;
+package com.mohammedsiddiq.EngineInterface;
 
-import com.mohammedsiddiq.ChessGame.DTOs.Move;
-import com.mohammedsiddiq.ChessGame.DTOs.Response;
-import com.mohammedsiddiq.ChessGame.DTOs.StartGameResponse;
+import com.mohammedsiddiq.DTOs.Move;
+import com.mohammedsiddiq.DTOs.Response;
+import com.mohammedsiddiq.DTOs.StartGameResponse;
 
 public interface IChessEngine {
     StartGameResponse newGame(String userName, boolean firstMove);

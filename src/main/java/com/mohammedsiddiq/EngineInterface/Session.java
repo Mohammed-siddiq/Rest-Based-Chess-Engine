@@ -1,4 +1,4 @@
-package com.mohammedsiddiq.ChessGame.EngineInterface;
+package com.mohammedsiddiq.EngineInterface;
 
 public class Session {
 
