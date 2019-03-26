@@ -1,4 +1,4 @@
-package com.mohammedsiddiq.ChessGame.DTOs;
+package com.mohammedsiddiq.DTOs;
 
 public class MakeMove {
     public Move getMove() {

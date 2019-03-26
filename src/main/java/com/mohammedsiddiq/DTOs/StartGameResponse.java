@@ -1,6 +1,6 @@
-package com.mohammedsiddiq.ChessGame.DTOs;
+package com.mohammedsiddiq.DTOs;
 
-import com.mohammedsiddiq.ChessGame.EngineInterface.Session;
+import com.mohammedsiddiq.EngineInterface.Session;
 
 public class StartGameResponse {
 
@@ -11,10 +11,6 @@ public class StartGameResponse {
 
     public void setYourOpponentName(String yourOpponentName) {
         this.yourOpponentName = yourOpponentName;
-    }
-
-    public boolean isFirstMove() {
-        return firstMove;
     }
 
     public void setFirstMove(boolean firstMove) {
