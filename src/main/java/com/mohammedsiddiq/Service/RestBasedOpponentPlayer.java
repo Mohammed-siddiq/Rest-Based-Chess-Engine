@@ -1,15 +1,8 @@
-package com.mohammedsiddiq.ChessGame.Service;
+package com.mohammedsiddiq.Service;
 
-import com.mohammedsiddiq.ChessGame.DTOs.Move;
-import com.mohammedsiddiq.ChessGame.RestClient.GameClient;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import org.petero.cuckoo.engine.chess.Player;
 import org.petero.cuckoo.engine.chess.Position;
-import retrofit2.Call;
-import retrofit2.Retrofit;
 
-import java.io.IOException;
 import java.util.List;
 
 public class RestBasedOpponentPlayer implements Player {

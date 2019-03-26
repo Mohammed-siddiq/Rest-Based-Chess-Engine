@@ -1,11 +1,13 @@
-package com.mohammedsiddiq.ChessGame.Service;
+package com.mohammedsiddiq.Service;
 
-import com.mohammedsiddiq.ChessGame.DTOs.MakeMove;
-import com.mohammedsiddiq.ChessGame.DTOs.Move;
-import com.mohammedsiddiq.ChessGame.DTOs.Response;
-import com.mohammedsiddiq.ChessGame.DTOs.StartGameResponse;
-import com.mohammedsiddiq.ChessGame.EngineInterface.*;
-import com.mohammedsiddiq.ChessGame.RestClient.GameClient;
+import com.mohammedsiddiq.Configs.Configuration;
+import com.mohammedsiddiq.DTOs.MakeMove;
+import com.mohammedsiddiq.DTOs.Move;
+import com.mohammedsiddiq.DTOs.Response;
+import com.mohammedsiddiq.DTOs.StartGameResponse;
+import com.mohammedsiddiq.RestClient.GameClient;
+import com.mohammedsiddiq.EngineInterface.IChessEngine;
+import com.mohammedsiddiq.EngineInterface.Session;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.petero.cuckoo.engine.chess.ComputerPlayer;
@@ -16,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,14 +31,12 @@ public class GameService implements IChessEngine {
     boolean done = false;
 
 
-    private Config config = ConfigFactory.load("default");
+    //Reading required configs
+    private String opponentsEndPoint = Configuration.OPPONENTS_END_POINT;
+    private String playerName = Configuration.USER_NAME;
+    private String playAs = Configuration.PLAY_AS;
 
-    //Load opponent's end point.
-    private String opponentsEndPoint = config.getString("OPPONENTS_END_POINT");
-    private String playerName = config.getString("USER_NAME");
-    private String playAs = config.getString("PLAY_AS");
-
-    private Retrofit retrofit = new Retrofit.Builder().baseUrl(opponentsEndPoint).build();
+    private Retrofit retrofit = new Retrofit.Builder().baseUrl(opponentsEndPoint).addConverterFactory(GsonConverterFactory.create()).build();
     private GameClient gameClient = retrofit.create(GameClient.class);
 
 
@@ -132,6 +133,7 @@ public class GameService implements IChessEngine {
         ChessEngineService chessEngineService = gameToChessEngineMap.get(sessionID);
 
         Move opponentResponse = chessEngineService.makeOpponentsNextMove(move);
+        chessEngineService.printChessBoard();
         if (opponentResponse.getMyMove().equals("-") || opponentResponse.getMyMove().equals("Invalid Move")) {
             return opponentResponse;
         }
@@ -160,7 +162,12 @@ public class GameService implements IChessEngine {
     private Move getOpponentsNextMove(MakeMove myMove) throws IOException {
 
         Call<Move> request = gameClient.makeNextMove(myMove);
-        return request.execute().body();
+        retrofit2.Response<Move> response = request.execute();
+
+        //If opponents killed itself assume that he has resigned
+        if (response.isSuccessful())
+            return response.body();
+        return new Move("resign");
 
     }
 
@@ -186,10 +193,15 @@ public class GameService implements IChessEngine {
             myMove = chessEngineService.makeMyNextMove();
 
         }
+        // Once the game is done final move/state must be sent
+        nextMove = new MakeMove();
+        nextMove.setGameId(session);
+        nextMove.setMove(myMove);
+        getOpponentsNextMove(nextMove);
 
     }
 
-    void startNewGame() throws IOException {
+    public void autoPlay() throws IOException {
         ChessEngineService chessEngineService;
         Move myMove;
         int session;

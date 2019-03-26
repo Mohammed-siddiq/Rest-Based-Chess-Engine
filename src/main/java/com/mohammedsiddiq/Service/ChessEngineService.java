@@ -1,10 +1,10 @@
-package com.mohammedsiddiq.ChessGame.Service;
+package com.mohammedsiddiq.Service;
 
 
 import org.petero.cuckoo.engine.chess.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.mohammedsiddiq.ChessGame.DTOs.Move;
+import com.mohammedsiddiq.DTOs.Move;
 
 
 public class ChessEngineService extends Game {
@@ -61,7 +61,7 @@ public class ChessEngineService extends Game {
 
         myMove.setMyMove(getPlayersCommand(restBasedOpponentPlayer));
         myMove.setMessage("Your Turn!");
-        logger.info("Returning my move {}", myMove.getMyMove());
+        logger.info("Opponent's move {}", myMove.getMyMove());
         return myMove;
     }
 
@@ -106,7 +106,7 @@ public class ChessEngineService extends Game {
         myMove.setMyMove(moveStr);
         myMove.setMessage("Your Turn!");
         myMove.setPlayer(ComputerPlayer.engineName);
-        logger.info("Returning my move {}", myMove.getMyMove());
+        logger.info(ComputerPlayer.engineName + "'s move {}", myMove.getMyMove());
         return myMove;
     }
 
