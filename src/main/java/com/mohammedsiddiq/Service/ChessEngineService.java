@@ -1,17 +1,10 @@
 package com.mohammedsiddiq.ChessGame.Service;
 
-import com.mohammedsiddiq.ChessGame.DTOs.StartGameResponse;
-import com.mohammedsiddiq.ChessGame.RestClient.GameClient;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
+
 import org.petero.cuckoo.engine.chess.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.mohammedsiddiq.ChessGame.DTOs.Move;
-import retrofit2.Call;
-import retrofit2.Retrofit;
-
-import java.io.IOException;
 
 
 public class ChessEngineService extends Game {

@@ -30,8 +30,7 @@ public class Application implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        //based on the configuration run as client player (who initiates first request for game) or server(who responds to the initial request)
-
+        //based on the configuration run as client player (who initiates first request for game) or server(who responds to the initial request
         //Loading Configs
 
     }
