@@ -1,5 +1,6 @@
 package com.mohammedsiddiq.Service;
 
+import com.mohammedsiddiq.Application;
 import com.mohammedsiddiq.Configs.Configuration;
 import com.mohammedsiddiq.DTOs.MakeMove;
 import com.mohammedsiddiq.DTOs.Move;
@@ -8,8 +9,6 @@ import com.mohammedsiddiq.DTOs.StartGameResponse;
 import com.mohammedsiddiq.RestClient.GameClient;
 import com.mohammedsiddiq.EngineInterface.IChessEngine;
 import com.mohammedsiddiq.EngineInterface.Session;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import org.petero.cuckoo.engine.chess.ComputerPlayer;
 import org.petero.cuckoo.engine.chess.Game;
 import org.petero.cuckoo.engine.chess.Player;
@@ -20,11 +19,11 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 
 @Service
-public class GameService implements IChessEngine {
+public class GameService implements IChessEngine, Serializable {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -32,12 +31,20 @@ public class GameService implements IChessEngine {
 
 
     //Reading required configs
-    private String opponentsEndPoint = Configuration.OPPONENTS_END_POINT;
     private String playerName = Configuration.USER_NAME;
     private String playAs = Configuration.PLAY_AS;
 
-    private Retrofit retrofit = new Retrofit.Builder().baseUrl(opponentsEndPoint).addConverterFactory(GsonConverterFactory.create()).build();
-    private GameClient gameClient = retrofit.create(GameClient.class);
+    private Retrofit retrofit;
+    private GameClient gameClient;
+
+    public Retrofit getRetrofit() {
+        return retrofit;
+    }
+
+    public void setRetrofit(Retrofit retrofit) {
+        this.retrofit = retrofit;
+        gameClient = retrofit.create(GameClient.class);
+    }
 
 
     //Map to keep track of multiple game instances
@@ -80,11 +87,11 @@ public class GameService implements IChessEngine {
             ((ComputerPlayer) whitePlayer).setTTLogSize(2);
             chessEngineService = new ChessEngineService(whitePlayer, blackPlayer);
             gameToChessEngineMap.put(session.getSessionId(), chessEngineService);
-
+//            serialize(chessEngineService,session.getSessionId());
             logger.debug("Making my first move..");
 
             Move myMove = chessEngineService.makeMyNextMove();
-            response.setMyFirstMove(myMove);
+            response.setFirstMove(myMove);
         } else {
 
             logger.debug("Intializing game.. with Rest user as white player");
@@ -239,7 +246,7 @@ public class GameService implements IChessEngine {
             // Making first moves
 
             StartGameResponse opponentsResponse = getOpponentsFirstMove(true);
-            chessEngineService.makeOpponentsNextMove(opponentsResponse.getMyFirstMove());
+            chessEngineService.makeOpponentsNextMove(opponentsResponse.getFirstMove());
             session = opponentsResponse.getSession().getSessionId();
             logger.debug("Making first move");
             myMove = chessEngineService.makeMyNextMove();
@@ -249,6 +256,41 @@ public class GameService implements IChessEngine {
             play(chessEngineService, myMove, session);
 
 
+        }
+
+    }
+
+    void serialize(ChessEngineService chessEngineService, int sessionId) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = null;
+        try {
+            FileOutputStream file = new FileOutputStream("output");
+            ObjectOutputStream out = new ObjectOutputStream(file);
+
+            // Method for serialization of object
+            out.writeObject(chessEngineService);
+
+            out.close();
+            file.close();
+
+            System.out.println("Object has been serialized");
+
+
+            FileInputStream filei = new FileInputStream("output");
+            ObjectInputStream in = new ObjectInputStream(filei);
+
+            // Method for deserialization of object
+            chessEngineService = (ChessEngineService) in.readObject();
+
+            in.close();
+            file.close();
+
+            chessEngineService.printChessBoard();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
 
     }

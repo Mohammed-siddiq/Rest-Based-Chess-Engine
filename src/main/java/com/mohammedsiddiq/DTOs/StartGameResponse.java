@@ -14,7 +14,7 @@ public class StartGameResponse {
     }
 
     public void setFirstMove(boolean firstMove) {
-        this.firstMove = firstMove;
+        this.isFirstMove = firstMove;
     }
 
     public Session getSession() {
@@ -27,14 +27,14 @@ public class StartGameResponse {
 
     private Session session;
     private String yourOpponentName;
-    boolean firstMove;
-    private Move myFirstMove;
+    private boolean isFirstMove;
+    private Move firstMove;
 
-    public Move getMyFirstMove() {
-        return myFirstMove;
+    public Move getFirstMove() {
+        return firstMove;
     }
 
-    public void setMyFirstMove(Move myFirstMove) {
-        this.myFirstMove = myFirstMove;
+    public void setFirstMove(Move firstMove) {
+        this.firstMove = firstMove;
     }
 }
