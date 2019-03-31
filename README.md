@@ -170,9 +170,10 @@ The response is the move made by the server in response to the move made by the 
 
 
 
-_Note on the Game state stored in the mongoDB:_
+_Note on the Game state stored in the mongoDB_
+-
 
-The following is a document stored in the collection of gameDBO.
+The following is a document stored in the collection of gameDBO in MongoDb.
 
 
 
@@ -338,7 +339,7 @@ Ensure that /capstan-repostiory on your local file system has the capstan built 
 ![Multiple instances running]()
 
 
-Running on amazon AWS : Please refer to the video provided.
+Form demo and running on amazon AWS : [Please refer to this youtube video]()
 
 
 
