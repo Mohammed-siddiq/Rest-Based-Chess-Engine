@@ -116,8 +116,9 @@ The response is the move made by the server in response to the move made by the 
  - Get the game state - **GET** - `/Chess/gameState?gameId=1342174387`
  
  **Request** : 
+ 
  ```
-curl -X GET \
+ curl -X GET \
   'http://localhost:8080/Chess/gameState?gameId=1342174387' \
   -H 'Postman-Token: b65ed466-24c6-4c0a-a48c-34654df9c85e' \
   -H 'cache-control: no-cache'
@@ -125,7 +126,7 @@ curl -X GET \
 
 **Response** :
 
-```$xslt
+```
 {
     "gameId": 1342174387,
     "whitePlayer": "Alpha",
