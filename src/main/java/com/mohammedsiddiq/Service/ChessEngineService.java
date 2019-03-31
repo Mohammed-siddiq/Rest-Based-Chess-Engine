@@ -48,7 +48,7 @@ public class ChessEngineService extends Game {
 
         Move myMove = new Move();
         if (getCurrentGameState() != GameState.ALIVE) {
-            logger.debug("Game is not alive");
+            logger.debug("GameDbo is not alive");
             myMove.setMessage(getGameStateString());
             myMove.setMyMove("-");
             return myMove;
@@ -91,9 +91,10 @@ public class ChessEngineService extends Game {
         //Check if game is alive before making the move
         if (getCurrentGameState() != GameState.ALIVE) {
 
-            logger.debug("Game is not alive");
+            logger.debug("GameDbo is not alive");
             myMove.setMessage(getGameStateString());
             myMove.setMyMove("-");
+            myMove.setGameStatus(getGameStateString());
             return myMove;
         }
 
@@ -106,6 +107,7 @@ public class ChessEngineService extends Game {
         myMove.setMyMove(moveStr);
         myMove.setMessage("Your Turn!");
         myMove.setPlayer(ComputerPlayer.engineName);
+        myMove.setGameStatus("Alive");
         logger.info(ComputerPlayer.engineName + "'s move {}", myMove.getMyMove());
         return myMove;
     }
@@ -119,6 +121,9 @@ public class ChessEngineService extends Game {
         makeOpponentsNextMove(new Move("resign"));
         return true;
     }
+
+
+
 
 
 }
