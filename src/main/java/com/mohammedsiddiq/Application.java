@@ -1,6 +1,7 @@
 package com.mohammedsiddiq;
 
 import com.mohammedsiddiq.Configs.Configuration;
+import com.mohammedsiddiq.Service.DbService;
 import com.mohammedsiddiq.Service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -16,6 +17,7 @@ public class Application implements CommandLineRunner {
     GameService service;
 
 
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
@@ -29,9 +31,8 @@ public class Application implements CommandLineRunner {
             service = new GameService();
             service.setRetrofit(new Retrofit.Builder().baseUrl("http://" + args[2]).addConverterFactory(GsonConverterFactory.create()).build());
             service.autoPlay();
-
-
         }
+
 
 
     }
