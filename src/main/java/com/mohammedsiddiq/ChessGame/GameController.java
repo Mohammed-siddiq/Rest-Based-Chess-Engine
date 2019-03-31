@@ -43,8 +43,8 @@ public class GameController {
 
     }
 
-    @GetMapping("/quitGame")
-    public Response quitGame(Session session) {
+    @PostMapping("/quitGame")
+    public Response quitGame(@RequestBody Session session) {
 
         Response response = gameService.quit(session);
 
