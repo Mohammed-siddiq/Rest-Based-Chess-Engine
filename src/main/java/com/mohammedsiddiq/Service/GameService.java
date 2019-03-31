@@ -1,11 +1,12 @@
 package com.mohammedsiddiq.Service;
 
-import com.mohammedsiddiq.Application;
 import com.mohammedsiddiq.Configs.Configuration;
 import com.mohammedsiddiq.DTOs.MakeMove;
 import com.mohammedsiddiq.DTOs.Move;
 import com.mohammedsiddiq.DTOs.Response;
 import com.mohammedsiddiq.DTOs.StartGameResponse;
+import com.mohammedsiddiq.DbObjects.GameDbo;
+import com.mohammedsiddiq.Repository.GameRepository;
 import com.mohammedsiddiq.RestClient.GameClient;
 import com.mohammedsiddiq.EngineInterface.IChessEngine;
 import com.mohammedsiddiq.EngineInterface.Session;
@@ -14,13 +15,14 @@ import org.petero.cuckoo.engine.chess.Game;
 import org.petero.cuckoo.engine.chess.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class GameService implements IChessEngine, Serializable {
@@ -37,6 +39,7 @@ public class GameService implements IChessEngine, Serializable {
     private Retrofit retrofit;
     private GameClient gameClient;
 
+
     public Retrofit getRetrofit() {
         return retrofit;
     }
@@ -47,8 +50,11 @@ public class GameService implements IChessEngine, Serializable {
     }
 
 
-    //Map to keep track of multiple game instances
+    //Map to keep track of multiple game instances and chess engines
     private HashMap<Integer, ChessEngineService> gameToChessEngineMap = new HashMap<>();
+
+    //Map to keep track of multiple game instances and DB state
+    private HashMap<Integer, GameDbo> gametodatabaseObject = new HashMap<>();
 
 
     @Override
@@ -63,6 +69,8 @@ public class GameService implements IChessEngine, Serializable {
         session.setSessionId(session.hashCode());
 
         ChessEngineService chessEngineService;
+//        GameDbo gameDbo = new GameDbo();
+//        session.setSessionId(gameDbo.getGameId());
 
         StartGameResponse response = new StartGameResponse();
         response.setFirstMove(firstMove);
@@ -85,25 +93,36 @@ public class GameService implements IChessEngine, Serializable {
             whitePlayer.timeLimit(1, 1, false);
             blackPlayer = new RestBasedOpponentPlayer(userName);
             ((ComputerPlayer) whitePlayer).setTTLogSize(2);
+            ((ComputerPlayer) whitePlayer).verbose = false;
             chessEngineService = new ChessEngineService(whitePlayer, blackPlayer);
+
+
+            //Updating the map to the newly created game
             gameToChessEngineMap.put(session.getSessionId(), chessEngineService);
-//            serialize(chessEngineService,session.getSessionId());
+
             logger.debug("Making my first move..");
 
             Move myMove = chessEngineService.makeMyNextMove();
+
+
             response.setFirstMove(myMove);
         } else {
 
             logger.debug("Intializing game.. with Rest user as white player");
             blackPlayer = new ComputerPlayer();
+            ((ComputerPlayer) blackPlayer).verbose = false;
             ComputerPlayer.engineName = "black" + " - " + playerName;
             blackPlayer.timeLimit(1, 1, false);
             whitePlayer = new RestBasedOpponentPlayer(userName);
             ((ComputerPlayer) blackPlayer).setTTLogSize(2);
+
+
             chessEngineService = new ChessEngineService(whitePlayer, blackPlayer);
             gameToChessEngineMap.put(session.getSessionId(), chessEngineService);
 
+
         }
+
 
         return response;
     }
@@ -119,11 +138,16 @@ public class GameService implements IChessEngine, Serializable {
 
 
         //Getting the right instance of the game;
-
         ChessEngineService chessEngineService = gameToChessEngineMap.get(session.getSessionId());
-        if (chessEngineService.quitGame())
+
+
+//        GameDbo gameDbo = gametodatabaseObject.get(session.getSessionId());
+        if (chessEngineService.quitGame()) {
             response.setMessage("Successfully terminated the game for the opponent " + session.getUserName());
-        else response.setMessage("No game exist for the opponent " + session.getUserName());
+
+        } else {
+            response.setMessage("No game exist for the opponent " + session.getUserName());
+        }
 
         return response;
     }
@@ -219,6 +243,7 @@ public class GameService implements IChessEngine, Serializable {
 
             logger.info("Starting the game as white");
             Player whitePlayer = new ComputerPlayer();
+            ((ComputerPlayer) whitePlayer).verbose = false;
             whitePlayer.timeLimit(2, 2, false);
 
             Player blackPlayer = new RestBasedOpponentPlayer();
@@ -251,7 +276,6 @@ public class GameService implements IChessEngine, Serializable {
             logger.debug("Making first move");
             myMove = chessEngineService.makeMyNextMove();
 
-
             //Continue playing with the opponent
             play(chessEngineService, myMove, session);
 
@@ -259,6 +283,34 @@ public class GameService implements IChessEngine, Serializable {
         }
 
     }
+
+    public void loadGameFromDb(GameDbo gameDbo) {
+        try {
+
+
+            if (gameDbo.isActive()) // if game is active
+            {
+
+                if (gameDbo.isFirstMove()) {
+                    Player whitePlayer = new ComputerPlayer();
+                    Player blackPlayer = new RestBasedOpponentPlayer(gameDbo.getBlackPlayer());
+                    ChessEngineService chessEngineService = new ChessEngineService(whitePlayer, blackPlayer);
+                    gameToChessEngineMap.put(gameDbo.getGameId(), chessEngineService);
+//                    updateGameState(chessEngineService, gameDbo.getMoves(), true);
+
+                }
+
+
+            }
+
+
+        } catch (Exception ex) {
+
+        }
+
+
+    }
+
 
     void serialize(ChessEngineService chessEngineService, int sessionId) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
