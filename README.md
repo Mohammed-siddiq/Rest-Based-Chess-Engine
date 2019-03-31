@@ -143,13 +143,13 @@ curl -X GET \
 }
 ```
 
-- Quit Game : **POST**  : 
-
+- Quit Game : **POST**  : `8080/Chess/quitGame`
 
 **Request**
-```$xslt
+
+```
 curl -X POST \
-  'http://localhost:8080/Chess/quitGame?sessionID=1642814462' \
+  'http://localhost:8080/Chess/quitGame \
   -H 'Content-Type: application/json' \
   -H 'Postman-Token: 31c3a148-5d0f-4263-bf65-faf020725714' \
   -H 'cache-control: no-cache' \
@@ -168,11 +168,13 @@ curl -X POST \
 }
 ```
 
+
 _Note on the Game state stored in the mongoDB:_
 
 The following is a document stored in the collection of gameDBO.
 
-```json
+
+```
 {
   "_id": 625850701,
   "whitePlayer": "Alpha",
