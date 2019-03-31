@@ -4,7 +4,9 @@ import com.mohammedsiddiq.DTOs.MakeMove;
 import com.mohammedsiddiq.DTOs.Move;
 import com.mohammedsiddiq.DTOs.Response;
 import com.mohammedsiddiq.DTOs.StartGameResponse;
+import com.mohammedsiddiq.DbObjects.GameDbo;
 import com.mohammedsiddiq.EngineInterface.Session;
+import com.mohammedsiddiq.Service.DbService;
 import com.mohammedsiddiq.Service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,10 +19,17 @@ public class GameController {
     @Autowired
     GameService gameService;
 
+    @Autowired
+    DbService dbService;
+
+
     @GetMapping("/newGame")
     public StartGameResponse newGame(String name, boolean firstMove) {
 
-        return gameService.newGame(name, firstMove);
+        StartGameResponse starGameResponse = gameService.newGame(name, firstMove);
+        //Updating the DB state
+        dbService.addNewGame(starGameResponse);
+        return starGameResponse;
     }
 
     @PostMapping("/Move")
@@ -28,6 +37,7 @@ public class GameController {
 
 
         Move myMove = gameService.move(move.getMove(), move.getGameId());
+        dbService.updateMove(move, myMove);
 
         return myMove;
 
@@ -36,8 +46,21 @@ public class GameController {
     @GetMapping("/quitGame")
     public Response quitGame(Session session) {
 
-        return gameService.quit(session);
+        Response response = gameService.quit(session);
+
+        dbService.updateOnQuit(session);
+        return response;
     }
+
+    @GetMapping("/gameState")
+    public GameDbo gameState(int gameId) {
+
+        return dbService.getGameState(gameId);
+    }
+
+
+
+
 
 
 }
