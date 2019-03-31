@@ -269,6 +269,7 @@ The following is a document stored in the collection of gameDBO in MongoDb.
     }
 
 
+![MongoDB's game state](https://drive.google.com/file/d/11Tpr6rSonG9N5kEdevX7q9kkYlGDFc3c/view?usp=sharing)
 
 
  Docker and Capstan build
@@ -332,11 +333,11 @@ You can plugin a docker image and run the capstan build :
     
 Ensure that /capstan-repostiory on your local file system has the capstan built file
 
-![which should look like this]()
+![which should look like this](https://drive.google.com/file/d/11Tpr6rSonG9N5kEdevX7q9kkYlGDFc3c/view?usp=sharing)
 
 
 
-![Multiple instances running]()
+![Multiple instances running](https://drive.google.com/open?id=11UWOp-db-CJ39Dz5k-hFMM6P8t5PSlRy)
 
 
 Form demo and running on amazon AWS : [Please refer to this youtube video]()
