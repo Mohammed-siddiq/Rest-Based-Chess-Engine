@@ -346,7 +346,7 @@ Ensure that /capstan-repostiory on your local file system has the capstan built 
 [Multiple instances running:screenshot](https://drive.google.com/open?id=11UWOp-db-CJ39Dz5k-hFMM6P8t5PSlRy)
 
 
-Form demo and running on amazon AWS : [Please refer to this youtube video](https://drive.google.com/file/d/12EhpItwk_ccaNVWVZWf03IBZfeIXErTl/view?usp=sharing)
+Form demo and running on amazon AWS : [Please refer to this youtube video](https://youtu.be/_COcH8cPyps)
 
 ##### Snapshots from the AWS cloud and running instances
 
