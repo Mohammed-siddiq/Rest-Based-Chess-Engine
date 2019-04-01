@@ -269,7 +269,7 @@ The following is a document stored in the collection of gameDBO in MongoDb.
     }
 
 
-Screenshot of [MongoDB's game state](https://drive.google.com/file/d/11Tpr6rSonG9N5kEdevX7q9kkYlGDFc3c/view?usp=sharing)
+Screenshot of [MongoDB's game state](https://drive.google.com/file/d/11iaw8VYkY_kHHl-w4hGXTtIYkCOMZNao/view?usp=sharing)
 
 
  Docker and Capstan build
@@ -348,7 +348,7 @@ Form demo and running on amazon AWS : [Please refer to this youtube video]()
 
 [AWS running instance container logs](https://drive.google.com/file/d/11k37jRnoTfOMq6GqM_ZUTkAmbP_NuVBc/view?usp=sharing)
 
-[AWS container status](https://drive.google.com/file/d/11k37jRnoTfOMq6GqM_ZUTkAmbP_NuVBc/view?usp=sharing)
+[AWS container status](https://drive.google.com/file/d/124bszgvhUQm1MdSWafnsymPq8h6znFYK/view?usp=sharing)
 
 
 
