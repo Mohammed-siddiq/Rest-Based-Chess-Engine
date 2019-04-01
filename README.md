@@ -313,6 +313,12 @@ Run mongo using
 
     docker run mongo
     
+In order to let two instances play against each other run the following command
+
+     docker run -p 8010:8010 immohammedsiddiq/rest-chess-engine-ai java -jar app.jar --server.port=8010 true \[**otherInstanceIP**]:\[**OtherInstancePort**] --spring.data.mongodb.host=172.17.0.2
+     
+Add the IP and port of other running instance in the above command/
+    
 - **Capstan build file:**
 
 ```
@@ -340,7 +346,7 @@ Ensure that /capstan-repostiory on your local file system has the capstan built 
 [Multiple instances running:screenshot](https://drive.google.com/open?id=11UWOp-db-CJ39Dz5k-hFMM6P8t5PSlRy)
 
 
-Form demo and running on amazon AWS : [Please refer to this youtube video]()
+Form demo and running on amazon AWS : [Please refer to this youtube video](https://drive.google.com/file/d/12EhpItwk_ccaNVWVZWf03IBZfeIXErTl/view?usp=sharing)
 
 ##### Snapshots from the AWS cloud and running instances
 
