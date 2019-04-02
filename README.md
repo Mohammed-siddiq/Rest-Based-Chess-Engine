@@ -6,7 +6,7 @@ This project is developed as an assignment of my master's course CS441- Engineer
 - Uses an open source chess engine called [cuckoo-chess-engine](http://hem.bredband.net/petero2b/javachess/index.html)
 - Uses the following interface to interact with the chess engine and the rest calls.
 
-```
+```java
 public interface IChessEngine {
 
     /**
@@ -59,7 +59,7 @@ Game APIs
       -H 'cache-control: no-cache'       
 
 **Response** :
-
+    
     {
         "session": {
             "sessionId": 1342174387,
@@ -103,6 +103,7 @@ The response is the move made by the server in response to the move made by the 
 **Response** :
 
 
+    
     {
         "myMove": "Nc3",
         "player": "white - Alpha",
@@ -126,6 +127,7 @@ The response is the move made by the server in response to the move made by the 
 **Response** :
 
 
+  
     {
         "gameId": 1342174387,
         "whitePlayer": "Alpha",
@@ -177,6 +179,7 @@ The following is a document stored in the collection of gameDBO in MongoDb.
 
 
 
+    
     {
       "_id": 625850701,
       "whitePlayer": "Alpha",
@@ -267,10 +270,6 @@ The following is a document stored in the collection of gameDBO in MongoDb.
       "_class": "com.mohammedsiddiq.DbObjects.GameDbo"
     }
 
-
-Screenshot of [MongoDB's game state](https://drive.google.com/file/d/11iaw8VYkY_kHHl-w4hGXTtIYkCOMZNao/view?usp=sharing)
-
-
  Docker and Capstan build
 -
 
@@ -338,23 +337,16 @@ You can plugin a docker image and run the capstan build :
     
 Ensure that /capstan-repostiory on your local file system has the capstan built file
 
- 
- ![which should look like this:screen shot](https://drive.google.com/file/d/11Tpr6rSonG9N5kEdevX7q9kkYlGDFc3c/view?usp=sharing)
 
-
-
-![Multiple instances running:screenshot](https://drive.google.com/open?id=11UWOp-db-CJ39Dz5k-hFMM6P8t5PSlRy)
-
-
-Form demo and running on amazon AWS : [Please refer to this youtube video](https://youtu.be/_COcH8cPyps)
+Form demo and running on amazon AWS, watch this video : [![Refer this youtube Video](https://github.com/Mohammed-siddiq/Rest-Based-Chess-Engine/blob/master/ScreenShots/Screen%20Shot%202019-03-31%20at%203.44.54%20PM.png)(https://youtu.be/_COcH8cPyps)
 
 ##### Snapshots from the AWS cloud and running instances
 
-![AWS console with isntance provisioned](https://drive.google.com/file/d/12DHVQPQ6k88znD6aX934oBlnn5JWRd8F/view?usp=sharing)
+![AWS console with isntance provisioned](https://github.com/Mohammed-siddiq/Rest-Based-Chess-Engine/blob/master/ScreenShots/Screen%20Shot%202019-03-31%20at%206.42.34%20PM.png)
 
 ![AWS running instance container logs](https://drive.google.com/file/d/11k37jRnoTfOMq6GqM_ZUTkAmbP_NuVBc/view?usp=sharing)
 
-![AWS container status](https://drive.google.com/file/d/124bszgvhUQm1MdSWafnsymPq8h6znFYK/view?usp=sharing)
+![AWS container status](https://github.com/Mohammed-siddiq/Rest-Based-Chess-Engine/blob/master/ScreenShots/Screen%20Shot%202019-03-31%20at%206.42.44%20PM.png)
 
 
 
