@@ -337,8 +337,8 @@ You can plugin a docker image and run the capstan build :
     
 Ensure that /capstan-repostiory on your local file system has the capstan built file
 
-
-Form demo and running on amazon AWS, watch this video : [![Refer this youtube Video](https://github.com/Mohammed-siddiq/Rest-Based-Chess-Engine/blob/master/ScreenShots/Screen%20Shot%202019-03-31%20at%203.44.54%20PM.png)(https://youtu.be/_COcH8cPyps)
+Form demo and running on amazon AWS, watch this video :
+[![Refer this youtube Video](https://github.com/Mohammed-siddiq/Rest-Based-Chess-Engine/blob/master/ScreenShots/Screen%20Shot%202019-03-31%20at%203.44.54%20PM.png)](https://youtu.be/_COcH8cPyps "Demo of the project" )
 
 ##### Snapshots from the AWS cloud and running instances
 
