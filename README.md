@@ -1,7 +1,7 @@
 # Overview
 
 
-This project is developed as an assignment of my master's course CS441- Engineering distributed objects in cloud computing. Exposes a chess game via REST calls. Also includes auto-play feature - where an instance(or multiple instances) can play chess game/games with other instances. Multiple games and their states are stored in the MongoDB.
+Exposes a chess game via REST calls. Also includes auto-play feature - where an instance(or multiple instances) can play chess game/games with other instances. Multiple games and their states are stored in the MongoDB.
 
 - Uses an open source chess engine called [cuckoo-chess-engine](http://hem.bredband.net/petero2b/javachess/index.html)
 - Uses the following interface to interact with the chess engine and the rest calls.
